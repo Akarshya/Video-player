@@ -16,3 +16,9 @@ You may also see any lint errors in the console.
 
 ### Search option
 Insert the YouTube ID to access the video.
+
+### Steps
+Clone the GitHub repository.
+Run npm install.
+Run npm start.
+Insert a YouTube ID to access the corresponding video.
