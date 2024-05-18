@@ -8,6 +8,7 @@ const VideoPlayer = ({ onPlayerReady }) => {
   const videoId = useSelector(state => state.videoId);
   const [title, setTitle] = useState('');
  const [description,setDescription]=useState('');
+
   useEffect(() => {
     const initPlayer = () => {
       if (playerRef.current) {
