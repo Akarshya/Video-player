@@ -55,7 +55,7 @@ const Annotations = ({ videoId, jumpToTimestamp }) => {
           value={note}
           onChange={setNote}
           className="border border-gray-300 mx-8 p-2 rounded-lg flex-grow"
-          placeholder={`Add your note at ${new Date(currentTime * 1000).toISOString().substr(11, 8)}`}
+          placeholder={`Add your note`}
         />
         <button
           onClick={handleAddNote}
