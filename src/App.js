@@ -14,6 +14,10 @@ const App = () => {
       localStorage.setItem('videoId', videoId);
     }
   }, [videoId]);
+  useEffect(() => {
+    // Clear local storage on component mount to ensure a fresh page
+    localStorage.removeItem('videoId');
+  }, []);
 
   const handleVideoChange = () => {
     dispatch(setVideoId(inputVideoId));
