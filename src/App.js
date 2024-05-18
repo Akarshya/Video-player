@@ -8,7 +8,12 @@ import './App.css';
 const App = () => {
   const dispatch = useDispatch();
   const [inputVideoId, setInputVideoId] = useState('');
-  const videoId = useSelector(state => state.videoId);
+  const videoId = useSelector(state => state.videoId || localStorage.getItem('videoId'));
+  useEffect(() => {
+    if (videoId) {
+      localStorage.setItem('videoId', videoId);
+    }
+  }, [videoId]);
 
   const handleVideoChange = () => {
     dispatch(setVideoId(inputVideoId));
@@ -28,15 +33,14 @@ const App = () => {
   useEffect(() => {
     return () => {
       if (window.player) {
-        // window.player.stopVideo();
         window.player = null;
       }
     };
   }, [videoId]);
 
   return (
-  
     <div className="App container mx-auto p-4">
+      
       <div className="flex justify-center mb-4">
         <input
           className="border border-gray-300 p-2 rounded-lg w-1/2"

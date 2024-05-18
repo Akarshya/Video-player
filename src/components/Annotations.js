@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { addAnnotation, editAnnotation, deleteAnnotation } from '../store/actions';
 import { CiCirclePlus } from "react-icons/ci";
@@ -8,13 +8,17 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
 const Annotations = ({ videoId, jumpToTimestamp }) => {
-  const videoAnnotations = useSelector(state => state.videos[videoId]?.annotations || []);
-  const currentTime = useSelector(state => state.currentTime[videoId] || 0);
   const dispatch = useDispatch();
+  const videoAnnotations = useSelector(state => state.videos[videoId]?.annotations || JSON.parse(localStorage.getItem(`annotations_${videoId}`)) || []);
+  const currentTime = useSelector(state => state.currentTime[videoId] || 0);
   const [note, setNote] = useState('');
   const [editing, setEditing] = useState(null);
   const currentDate = new Date().toISOString();
   const [editedNote, setEditedNote] = useState('');
+
+  useEffect(() => {
+    localStorage.setItem(`annotations_${videoId}`, JSON.stringify(videoAnnotations));
+  }, [videoAnnotations, videoId]);
 
   const handleAddNote = () => {
     if (editing !== null) {
@@ -68,7 +72,7 @@ const Annotations = ({ videoId, jumpToTimestamp }) => {
       </div>
       <ul className="mt-4 space-y-2">
         {videoAnnotations.map((annotation) => (
-          <li key={annotation.id} className="flex items-start space-x-2"  onClick={() => jumpToTimestamp(annotation.timestamp)}>
+          <li key={annotation.id} className="flex items-start space-x-2" onClick={() => jumpToTimestamp(annotation.timestamp)}>
             <div>
               <div>{formattedDate(annotation.date)}</div>
               {editing === annotation.id ? (
@@ -76,11 +80,9 @@ const Annotations = ({ videoId, jumpToTimestamp }) => {
                   value={editedNote}
                   onChange={setEditedNote}
                   className="border border-gray-300 p-2 rounded-lg flex-grow"
-                  
                 />
               ) : (
                 <div
-                
                   className="cursor-pointer text-sm"
                   dangerouslySetInnerHTML={{ __html: `${formatTime(annotation.timestamp.toFixed(2))}: ${annotation.note}` }}
                 />

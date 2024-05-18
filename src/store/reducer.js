@@ -6,10 +6,16 @@ const initialState = {
   videoId: '',
 };
 
-const reducer = (state = initialState, action) => {
+// Load state from local storage if available
+const savedState = localStorage.getItem('reduxState');
+const persistedState = savedState ? JSON.parse(savedState) : initialState;
+
+const reducer = (state = persistedState, action) => {
+  let nextState;
+
   switch (action.type) {
     case ADD_ANNOTATION:
-      return {
+      nextState = {
         ...state,
         videos: {
           ...state.videos,
@@ -22,8 +28,10 @@ const reducer = (state = initialState, action) => {
           },
         },
       };
+      break;
+
     case EDIT_ANNOTATION:
-      return {
+      nextState = {
         ...state,
         videos: {
           ...state.videos,
@@ -37,8 +45,10 @@ const reducer = (state = initialState, action) => {
           },
         },
       };
+      break;
+
     case DELETE_ANNOTATION:
-      return {
+      nextState = {
         ...state,
         videos: {
           ...state.videos,
@@ -48,8 +58,10 @@ const reducer = (state = initialState, action) => {
           },
         },
       };
+      break;
+
     case SET_VIDEO_ID:
-      return {
+      nextState = {
         ...state,
         videoId: action.payload,
         videos: {
@@ -57,17 +69,26 @@ const reducer = (state = initialState, action) => {
           [action.payload]: state.videos[action.payload] || { annotations: [] },
         },
       };
+      break;
+
     case SET_CURRENT_TIME:
-      return {
+      nextState = {
         ...state,
         currentTime: {
           ...state.currentTime,
           [action.payload.videoId]: action.payload.time,
         },
       };
+      break;
+
     default:
-      return state;
+      nextState = state;
   }
+
+  // Save state to local storage after each action
+  localStorage.setItem('reduxState', JSON.stringify(nextState));
+
+  return nextState;
 };
 
 export default reducer;
